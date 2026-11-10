@@ -1,0 +1,6 @@
+
+	Box-Ljung test
+
+data:  innovations
+X-squared = 24.872, df = 24, p-value = 0.4127
+

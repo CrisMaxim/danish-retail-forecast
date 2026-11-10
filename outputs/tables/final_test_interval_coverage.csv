@@ -1,0 +1,7 @@
+".model","horizon","N","inside_80","inside_95","coverage_80_pct","coverage_95_pct"
+"ETS",1,10,9,10,90,100
+"ETS",2,10,9,10,90,100
+"ETS",3,10,9,10,90,100
+"Seasonal_naive",1,10,8,10,80,100
+"Seasonal_naive",2,10,8,10,80,100
+"Seasonal_naive",3,10,8,10,80,100

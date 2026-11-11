@@ -89,7 +89,7 @@ png(
 
 plot(
   stl_fit,
-  main = "Danish retail trade: STL decomposition"
+  main = "STL: development data, Jan 2015–Sep 2025 (129 months)"
 )
 
 dev.off()

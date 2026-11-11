@@ -10,13 +10,40 @@ This project uses public data from Statistics Denmark to analyse monthly retail 
 
 Forecast origin: September 2026. Forecast period: October–December 2026.
 
-| Month | Estimated year-on-year change |
-|---|---:|
-| October 2026 | +2.86% |
-| November 2026 | −0.12% |
-| December 2026 | +4.94% |
+| Month | Estimated year-on-year change | 95% prediction interval |
+|---|---:|---:|
+| October 2026 | +2.86% | −2.78% to +8.49% |
+| November 2026 | −0.12% | −5.78% to +5.54% |
+| December 2026 | +4.94% | −1.16% to +11.0% |
 
-These are model estimates, not observed changes. The chart shows the quantity index and model-based 80% and 95% prediction intervals.
+All three intervals include zero, so both decreases and increases
+relative to the previous year remain plausible under the model.
+
+These are marginal prediction intervals for each month, conditional
+on the model assumptions and treating the corresponding 2025 index
+value as fixed. They do not provide simultaneous 95% coverage
+for all three months.
+
+## Kort resumé på dansk
+
+Projektet undersøger, om tidsseriemodeller kan forbedre prognoser
+for dansk detailhandel sammenlignet med en simpel sæsonnaiv metode.
+
+En ETS-model gav de laveste fejl i krydsvalideringen. I den afsluttende
+evaluering var RMSE 2,49 mod 4,59 indekspoint for den sæsonnaive metode,
+en reduktion på cirka 46%.
+
+Prognosen peger på en stigning på 4,94% i december 2026 sammenlignet
+med december 2025. Modellens 95%-prognoseinterval spænder dog fra
+−1,16% til +11,0%, så både et fald og en stigning er mulige.
+
+Resultaterne kan indgå som et overordnet markedssignal i planlægningen.
+De beskriver detailhandlen på landsplan og kan ikke direkte omsættes
+til lager- eller bemandingsbehov i en bestemt butik.
+
+Evalueringen omfatter kun 10 prognoser pr. horisont, og data kan blive
+revideret. Projektet er en selvstændig porteføljeanalyse og ikke en
+officiel prognose fra Danmarks Statistik.
 
 ## Data
 
@@ -93,7 +120,16 @@ The ETS model fitted to the development data was ETS(M,A,A): multiplicative erro
 
 Its innovations had a mean close to zero. A Ljung–Box test through lag 24, with fitdf = 0, returned p = 0.4127. This did not detect significant autocorrelation at those lags.
 
-The Q-Q plot showed departures in the tails, and several large innovations remained.
+The Q-Q plot showed departures in the tails. The five largest
+absolute innovations occurred in March 2021, January 2021,
+October 2020, March 2020 and May 2020. These dates overlap
+the COVID-19 pandemic period, but this analysis does not
+establish the causes of the deviations.
+
+The other months among the eight largest absolute innovations
+were May 2015, February 2024 and December 2015.
+The complete table is saved in
+`outputs/tables/ets_extreme_innovations.csv`.
 
 ![ETS diagnostics](outputs/figures/ets_diagnostics.png)
 
@@ -103,6 +139,18 @@ In the final evaluation, ETS prediction intervals achieved the following coverag
 - Nominal 95% intervals: 10 of 10 observations, or 100%.
 
 This small sample does not establish that the intervals are well calibrated.
+
+## Final forecast model
+
+After refitting the automatic ETS procedure to all 141 monthly
+observations (January 2015–September 2026), the selected specification
+remained ETS(M,A,A): multiplicative errors, additive trend and additive
+seasonality.
+
+The re-estimated smoothing parameters were alpha = 0.2811083,
+beta = 0.0001000151 and gamma = 0.0001011222.
+The complete model report is saved in
+`outputs/tables/ets_final_report.txt`.
 
 ## Reproduce the analysis
 

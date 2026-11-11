@@ -76,6 +76,8 @@ png(
   res = 150
 )
 
+par(mar = c(6, 5, 4, 2) + 0.1)
+
 plot(
   as.Date(history$month),
   history$retail_index,
@@ -88,7 +90,7 @@ plot(
     forecast_table$upper_95
   ),
   main = "Danish retail trade: three-month ETS forecast",
-  xlab = "Month",
+  xlab = "",
   ylab = "Quantity index",
   col = "#333333"
 )
@@ -135,7 +137,7 @@ legend(
 mtext(
   "Source: Statistics Denmark, DETA212A | Forecast based on data through September 2026",
   side = 1,
-  line = 3,
+  line = 4,
   cex = 0.7
 )
 
@@ -153,12 +155,28 @@ previous_year <- retail |>
   )
 
 forecast_yoy <- retail_forecast |>
+  hilo(level = c(80, 95)) |>
   as_tibble() |>
-  select(month, forecast = .mean) |>
+  transmute(
+    month,
+    forecast = .mean,
+    lower_80 = `80%`$lower,
+    upper_80 = `80%`$upper,
+    lower_95 = `95%`$lower,
+    upper_95 = `95%`$upper
+  ) |>
   left_join(previous_year, by = "month") |>
   mutate(
     change_yoy_pct =
-      100 * (forecast / index_previous_year - 1)
+      100 * (forecast / index_previous_year - 1),
+    yoy_lower_80 =
+      100 * (lower_80 / index_previous_year - 1),
+    yoy_upper_80 =
+      100 * (upper_80 / index_previous_year - 1),
+    yoy_lower_95 =
+      100 * (lower_95 / index_previous_year - 1),
+    yoy_upper_95 =
+      100 * (upper_95 / index_previous_year - 1)
   )
 
 stopifnot(!anyNA(forecast_yoy$index_previous_year))
@@ -169,4 +187,8 @@ write.csv(
   row.names = FALSE
 )
 
-print(forecast_yoy)
+print(
+  forecast_yoy |>
+    select(month, change_yoy_pct, yoy_lower_95, yoy_upper_95),
+  width = Inf
+)

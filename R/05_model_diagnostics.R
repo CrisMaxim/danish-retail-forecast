@@ -118,3 +118,18 @@ capture.output(
   lb_test,
   file = "outputs/tables/ets_ljung_box.txt"
 )
+
+# Identify the eight largest absolute innovations
+extreme_innovations <- ets_augmented |>
+  as_tibble() |>
+  arrange(desc(abs(.innov))) |>
+  select(month, retail_index, .fitted, .innov) |>
+  slice_head(n = 8)
+
+print(extreme_innovations, n = Inf, width = Inf)
+
+write.csv(
+  extreme_innovations,
+  "outputs/tables/ets_extreme_innovations.csv",
+  row.names = FALSE
+)
